@@ -1,5 +1,12 @@
 # Bitcoin-MarketPlace
+## Writing an Exchange
 
-## Requirements
+## User Options
+  1. Deposit/Withdraw Funds
+  2. Exchange Ether for Tokens
 
-Create a virtual market for asset management.
+
+## Admin Options
+   1. Owned
+   2. Add tokens to trade
+
