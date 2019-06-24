@@ -1,6 +1,4 @@
 # Bitcoin-MarketPlace
-
-
 ## Writing an Exchange
 
 ## User Options
@@ -11,3 +9,4 @@
 ## Admin Options
    1. Owned
    2. Add tokens to trade
+
