@@ -1,9 +1,9 @@
 pragma solidity ^0.5.0;
 
-import "./Owned.sol";
-import "./FixedSupplyToken.sol";
+import "contracts/Ownable.sol";
+import "contracts/FixedSupplyToken.sol";
 
-contract Exchange is Owned{
+contract Exchange is Ownable{
 
 
     struct Offer{
