@@ -1,4 +1,4 @@
-var FixedSupplyToken = artifacts.require("./fixedSupplyToken");
+const FixedSupplyToken = artifacts.require("./fixedSupplyToken");
 
 contract("MyToken", function(accounts) {
   it("should verify that the first account has all the tokens", async () => {
