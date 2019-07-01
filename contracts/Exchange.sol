@@ -39,14 +39,11 @@ contract Exchange is Ownable{
     mapping(uint8 => Token)token;
     uint8 symbolNameIndex;
 
-
-    //events
-
     // Management events
     event TokenAddedToSystem(uint _symbolIndex, string _token, uint _timestamp);
 
     // Deposit/Withdrawal events
-    event DepositForTokenRReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
+    event DepositForTokenReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
     event WithdrawalToken(address indexed _to, uint indexed _symbolIndex, uint _amount, uint _timestamp);
     event DepositForEthReceived(address indexed _from, uint _amount, uint _timestamp);
     event WithdrawalEth(address indexed _to, uint _amount, uint _timestamp);
@@ -128,7 +125,7 @@ contract Exchange is Ownable{
         require(tokens.transferFrom(msg.sender, address(this), amount) == true, 'error with transfer');
         require(tokenBalForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalForAddress[msg.sender][symbolNameIndex], 'invalid balance');
         tokenBalForAddress[msg.sender][symbolNameIndex] += amount;
-        emit DepositForTokenRReceived(msg.sender, symbolNameIndex, amount, now);
+        emit DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
     }
 
     function withdrawToken(string memory symbolName, uint amount) public{
