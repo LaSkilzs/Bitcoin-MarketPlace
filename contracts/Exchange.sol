@@ -40,13 +40,25 @@ contract Exchange is Ownable{
     uint8 symbolNameIndex;
 
     //Balances
-    mapping(address => mapping(uint8 => uint)) tokenBalanceForAddress;
+    mapping(address => mapping(uint8 => uint)) tokenBalForAddress;
     mapping(address => uint) balanceEthForAddress;
 
     // Ethereum Management
-    function depositEther()external payable{}
-    function withdrawEther(uint amountInWei) external{}
-    function getEthBalanceInWei() external returns(uint){}
+    function depositEther()external payable {
+        require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender], "Invalid Ether Amount");
+        balanceEthForAddress[msg.sender] += msg.value;
+    }
+
+    function withdrawEther(uint amountInWei) external{
+        require(balanceEthForAddress[msg.sender] - amountInWei >= 0, 'Invalid Amount');
+        require(balanceEthForAddress[msg.sender] - amountInWei <= balanceEthForAddress[msg.sender], 'Invalid Amount');
+        balanceEthForAddress[msg.sender] -= amountInWei;
+        msg.sender.transfer(amountInWei);
+    }
+    function getEthBalanceInWei() external view returns(uint){
+        return balanceEthForAddress[msg.sender];
+    }
+
 
     // Token Management
     function addToken(string memory symbolName, address erc20TokenAddress) public{
@@ -82,9 +94,37 @@ contract Exchange is Ownable{
     }
 
     //General Functionality
-    function depositToken(string memory symbolName, uint amount) public{}
-    function withdrawToken(string memory symbolName, uint amount) public{}
-    function getBalance(string memory symbolName) public returns(uint){}
+    function depositToken(string memory symbolName, uint amount) public{
+        symbolNameIndex = getSymbolIndex(symbolName);
+        require(symbolNameIndex > 0, 'no token contract available');
+        require(token[symbolNameIndex].tokenContract != address(0), "wrong user");
+
+        ERC20Interface tokens = ERC20Interface(token[symbolNameIndex].tokenContract);
+
+        require(tokens.transferFrom(msg.sender, address(this), amount) == true, 'error with transfer');
+        require(tokenBalForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalForAddress[msg.sender][symbolNameIndex], 'invalid balance');
+        tokenBalForAddress[msg.sender][symbolNameIndex] += amount;
+    }
+
+    function withdrawToken(string memory symbolName, uint amount) public{
+        symbolNameIndex = getSymbolIndex(symbolName);
+        require(token[symbolNameIndex].tokenContract != address(0), 'can not locate tokenContract');
+        require(symbolNameIndex > 0, 'no token contract available');
+
+        ERC20Interface tokens = ERC20Interface(token[symbolNameIndex].tokenContract);
+
+        require(tokenBalForAddress[msg.sender][symbolNameIndex] - amount >= 0, 'invalid amount');
+        require(tokenBalForAddress[msg.sender][symbolNameIndex] - amount <= tokenBalForAddress[msg.sender][symbolNameIndex], "invalid amount");
+
+        tokenBalForAddress[msg.sender][symbolNameIndex] -= amount;
+        require(tokens.transfer(msg.sender, amount) == true, "invalid request");
+    }
+
+    function getBalance(string memory symbolName) public returns(uint){
+        symbolNameIndex = getSymbolIndex(symbolName);
+        require(symbolNameIndex > 0, 'No Token Contract');
+        return tokenBalForAddress[msg.sender][symbolNameIndex];
+    }
 
                           // OrderBook //
 

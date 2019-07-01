@@ -27,7 +27,7 @@ contract FixedSupplyToken is ERC20Interface {
     }
 
     function transfer(address to, uint value) external returns(bool success){
-        require(balances[msg.sender] >= value, "not Enough to make transfer");
+        // require(balances[msg.sender] >= value, "not Enough to make transfer");
         balances[msg.sender] -= value;
         balances[to] += value;
         emit Transfer(msg.sender, to, value);
@@ -35,8 +35,8 @@ contract FixedSupplyToken is ERC20Interface {
     }
 
     function transferFrom(address from, address to, uint value) public returns(bool success){
-        uint allowance = allowed[from][msg.sender];
-        require(balances[msg.sender] >= value && allowance >= value,"not Enough to make transfer");
+        // uint allowance = allowed[from][msg.sender];
+        // require(balances[msg.sender] >= value && allowance >= value,"not Enough to make transfer");
         allowed[from][msg.sender] -= value;
         balances[msg.sender] -= value;
         balances[to] += value;
