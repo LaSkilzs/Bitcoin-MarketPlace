@@ -39,6 +39,27 @@ contract Exchange is Ownable{
     mapping(uint8 => Token)token;
     uint8 symbolNameIndex;
 
+
+    //events
+
+    // Management events
+    event TokenAddedToSystem(uint _symbolIndex, string _token, uint _timestamp);
+
+    // Deposit/Withdrawal events
+    event DepositForTokenRReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
+    event WithdrawalToken(address indexed _to, uint indexed _symbolIndex, uint _amount, uint _timestamp);
+    event DepositForEthReceived(address indexed _from, uint _amount, uint _timestamp);
+    event WithdrawalEth(address indexed _to, uint _amount, uint _timestamp);
+
+    // Trading/Order Events
+    event LimitSellOrderCreated(uint indexed _symbolIndex, address indexed _who, uint _amountTokens, uint _priceInWei, uint _orderKey);
+    event SellOrderFulfilled(uint indexed _symbolIndex, uint _amount, uint _priceInWei, uint _orderKey);
+    event SellOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderKey);
+
+    event LimitBuyOrderCreated(uint indexed _symbolIndex, uint _amount, uint _priceInWei, uint _orderKey);
+    event BuyOrderFulfilled(uint indexed _symbolIndex, uint _amount, uint _priceInWei, uint _orderKey);
+    event BuyOrderCanceled(uint indexed _symbolIndex, uint _priceInWei, uint _orderKey);
+
     //Balances
     mapping(address => mapping(uint8 => uint)) tokenBalForAddress;
     mapping(address => uint) balanceEthForAddress;
@@ -47,6 +68,7 @@ contract Exchange is Ownable{
     function depositEther()external payable {
         require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender], "Invalid Ether Amount");
         balanceEthForAddress[msg.sender] += msg.value;
+        emit DepositForEthReceived(msg.sender, msg.value, now);
     }
 
     function withdrawEther(uint amountInWei) external{
@@ -54,6 +76,7 @@ contract Exchange is Ownable{
         require(balanceEthForAddress[msg.sender] - amountInWei <= balanceEthForAddress[msg.sender], 'Invalid Amount');
         balanceEthForAddress[msg.sender] -= amountInWei;
         msg.sender.transfer(amountInWei);
+        emit WithdrawalEth(msg.sender, amountInWei, now);
     }
     function getEthBalanceInWei() external view returns(uint){
         return balanceEthForAddress[msg.sender];
@@ -66,6 +89,7 @@ contract Exchange is Ownable{
         symbolNameIndex++;
         token[symbolNameIndex].tokenContract = erc20TokenAddress;
         token[symbolNameIndex].symbolName = symbolName;
+        emit TokenAddedToSystem(symbolNameIndex, symbolName, now);
     }
     function hasToken(string memory symbolName) public view returns(bool){
         uint8 index = getSymbolIndex(symbolName);
@@ -104,6 +128,7 @@ contract Exchange is Ownable{
         require(tokens.transferFrom(msg.sender, address(this), amount) == true, 'error with transfer');
         require(tokenBalForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalForAddress[msg.sender][symbolNameIndex], 'invalid balance');
         tokenBalForAddress[msg.sender][symbolNameIndex] += amount;
+        emit DepositForTokenRReceived(msg.sender, symbolNameIndex, amount, now);
     }
 
     function withdrawToken(string memory symbolName, uint amount) public{
@@ -118,6 +143,7 @@ contract Exchange is Ownable{
 
         tokenBalForAddress[msg.sender][symbolNameIndex] -= amount;
         require(tokens.transfer(msg.sender, amount) == true, "invalid request");
+        emit WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
     }
 
     function getBalance(string memory symbolName) public returns(uint){
