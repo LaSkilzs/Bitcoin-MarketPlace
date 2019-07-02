@@ -23,7 +23,7 @@ contract Exchange is Ownable{
 
     struct Token{
         address tokenContract;
-        string symbolName;
+        bytes32 symbolName;
 
         mapping(uint => OrderBook) buyBook;
         uint currrentBuyPrice;
@@ -40,7 +40,7 @@ contract Exchange is Ownable{
     uint8 symbolNameIndex;
 
     // Management events
-    event TokenAddedToSystem(uint _symbolIndex, string _token, uint _timestamp);
+    event TokenAddedToSystem(uint _symbolIndex, bytes32 _token, uint _timestamp);
 
     // Deposit/Withdrawal events
     event DepositForTokenReceived(address indexed _from, uint indexed _symbolIndex, uint _amount, uint _timestamp);
@@ -81,21 +81,21 @@ contract Exchange is Ownable{
 
 
     // Token Management
-    function addToken(string memory symbolName, address erc20TokenAddress) public{
+    function addToken(bytes32 memory symbolName, address erc20TokenAddress) public{
         require(!hasToken(symbolName), "can't add Token");
         symbolNameIndex++;
         token[symbolNameIndex].tokenContract = erc20TokenAddress;
         token[symbolNameIndex].symbolName = symbolName;
         emit TokenAddedToSystem(symbolNameIndex, symbolName, now);
     }
-    function hasToken(string memory symbolName) public view returns(bool){
+    function hasToken(bytes32 memory symbolName) public view returns(bool){
         uint8 index = getSymbolIndex(symbolName);
         if(index == 0){
             return false;
         }
         return true;
     }
-    function getSymbolIndex(string memory symbolName) public view returns(uint8){
+    function getSymbolIndex(bytes32 memory symbolName) public view returns(uint8){
         for(uint8 i = 1; i <= symbolNameIndex; i++){
             if(stringsEqual(token[i].symbolName, symbolName)){
                 return i;
@@ -103,7 +103,7 @@ contract Exchange is Ownable{
         }
         return 0;
     }
-    function stringsEqual(string storage _a, string memory _b) internal view returns(bool){
+    function stringsEqual(bytes32 storage _a, bytes32 memory _b) internal view returns(bool){
         bytes storage a = bytes(_a);
         bytes memory b = bytes(_b);
         require((a == b), "Strings are not Equal");
@@ -115,7 +115,7 @@ contract Exchange is Ownable{
     }
 
     //General Functionality
-    function depositToken(string memory symbolName, uint amount) public{
+    function depositToken(bytes32 memory symbolName, uint amount) public{
         symbolNameIndex = getSymbolIndex(symbolName);
         require(symbolNameIndex > 0, 'no token contract available');
         require(token[symbolNameIndex].tokenContract != address(0), "wrong user");
@@ -128,7 +128,7 @@ contract Exchange is Ownable{
         emit DepositForTokenReceived(msg.sender, symbolNameIndex, amount, now);
     }
 
-    function withdrawToken(string memory symbolName, uint amount) public{
+    function withdrawToken(bytes32 memory symbolName, uint amount) public{
         symbolNameIndex = getSymbolIndex(symbolName);
         require(token[symbolNameIndex].tokenContract != address(0), 'can not locate tokenContract');
         require(symbolNameIndex > 0, 'no token contract available');
@@ -143,7 +143,7 @@ contract Exchange is Ownable{
         emit WithdrawalToken(msg.sender, symbolNameIndex, amount, now);
     }
 
-    function getBalance(string memory symbolName) public returns(uint){
+    function getBalance(bytes32 memory symbolName) public returns(uint){
         symbolNameIndex = getSymbolIndex(symbolName);
         require(symbolNameIndex > 0, 'No Token Contract');
         return tokenBalForAddress[msg.sender][symbolNameIndex];
@@ -152,18 +152,18 @@ contract Exchange is Ownable{
                           // OrderBook //
 
     //Bid Orders
-    function getBuyOrderBook(string memory symbolName) public returns(uint[] memory,uint[] memory){}
+    function getBuyOrderBook(bytes32 memory symbolName) public returns(uint[] memory,uint[] memory){}
 
     //Ask Orders
-    function getSellOrderBook(string memory symbolName) public returns(uint[] memory, uint[] memory){}
+    function getSellOrderBook(bytes32 memory symbolName) public returns(uint[] memory, uint[] memory){}
 
     //New Bid Order
-    function buyToken(string memory symbolName, uint priceInWei, uint amount) public{}
+    function buyToken(bytes32 memory symbolName, uint priceInWei, uint amount) public{}
 
     //New Ask Order
-    function sellToken(string memory symbolName, uint priceInWei, uint amount) public{}
+    function sellToken(bytes32 memory symbolName, uint priceInWei, uint amount) public{}
 
     //Cancel Limit Order
-    function cancelOrder(string memory symbolName, uint priceInWei, uint amount, uint offer_key) public{}
+    function cancelOrder(bytes32 memory symbolName, uint priceInWei, uint amount, uint offer_key) public{}
 
 }
