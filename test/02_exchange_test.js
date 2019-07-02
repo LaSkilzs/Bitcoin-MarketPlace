@@ -47,10 +47,14 @@ contract("Exchange Basic Tests", function(accounts) {
       .deployed()
       .then(instance => {
         myExchangeInstance = instance;
-        return myExchangeInstance.depositEther({
-          from: accounts[0],
-          value: web3.utils.toWei("1", "ether")
-        });
+        return myExchangeInstance.depositEther(
+          {
+            from: accounts[0],
+            value: web3.utils.toWei("1", "ether")
+          },
+          0,
+          "zrp"
+        );
       })
       .then(txHash => {
         gasUsed =
