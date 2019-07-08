@@ -6,7 +6,12 @@ const sideLinks = [
   ["Home", "home"],
   ["Exchange", "store"],
   ["Wallet", "account_balance_wallet"],
-  ["Trading", "euro_symbol"]
+  ["Withdraw", "card_giftcard"],
+  ["Deposit", "payment"],
+  ["Trading", "euro_symbol"],
+  ["News", "web"],
+  ["Watchlist", "format_list_numbered"],
+  ["Portfolio", "work"]
 ];
 
 const drawerWidth = 240;

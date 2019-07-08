@@ -4,38 +4,53 @@ import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 
+const useStyles = makeStyles(theme => ({
+  grid: {
+    marginTop: 100,
+    marginLeft: 200,
+    width: "80rem"
+  },
+  subGrid: {
+    marginTop: 60,
+    marginLeft: 200,
+    width: "80rem"
+  }
+}));
+
 const MainGrid = () => {
+  const classes = useStyles();
   return (
     <React.Fragment>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={3}>
-          <Paper>small dash 1</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper>small dash 2</Paper>
+          <Paper style={{ height: "10vh" }}>Account Balance</Paper>
         </Grid>
         <Grid item xs={3}>
-          <Paper>small dash 3</Paper>
+          <Paper style={{ height: "10vh" }}>Last Day Revenue</Paper>
         </Grid>
-        <Grid item xs={8}>
-          <Paper>main dash 1</Paper>
+        <Grid item xs={3}>
+          <Paper style={{ height: "10vh" }}>Revenue this Month</Paper>
         </Grid>
-        <Grid item xs={4}>
-          <Paper>medium dash 1</Paper>
+        <Grid item xs={3}>
+          <Paper style={{ height: "10vh" }}>Revenue this year</Paper>
+        </Grid>
+        <Grid item xs={9}>
+          <Paper style={{ height: "50vh" }}>Zap Chart</Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper style={{ height: "50vh" }}>Profile Card</Paper>
         </Grid>
       </Grid>
-      <Divider />
-      <Grid container spacing={3}>
-        <Grid item xs={3}>
-          <Paper>small dash 4</Paper>
+      <div>
+        <Grid container spacing={3} className={classes.subGrid}>
+          <Grid item xs={6}>
+            <Paper style={{ height: "10vh" }}>Recent Activity</Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper style={{ height: "10vh" }}>Top Trades</Paper>
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <Paper>small dash 5</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper>small dash 6</Paper>
-        </Grid>
-      </Grid>
+      </div>
     </React.Fragment>
   );
 };

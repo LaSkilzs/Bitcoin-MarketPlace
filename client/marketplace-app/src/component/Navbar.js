@@ -7,7 +7,8 @@ const useStyles = makeStyles(theme => ({
   navbar: {
     background: "red",
     position: "fixed",
-    width: `calc(100% - ${drawerWidth}px)`
+    width: `calc(100% - ${drawerWidth}px)`,
+    padding: "1.3rem"
   },
   title: {
     display: "flex",
@@ -33,10 +34,12 @@ const Navbar = () => {
     <div>
       <AppBar className={classes.navbar}>
         <div className={classes.header}>
-          <Typography className={classes.title}>Marketplace</Typography>
+          <Typography className={classes.title}>
+            Crypto Arbitrage Marketplace
+          </Typography>
           <div className={classes.icons}>
             <i className="material-icons">email</i>
-            <i className="material-icons">notification_important</i>
+            <i className="material-icons">notifications</i>
             <i className="material-icons">account_circle</i>
           </div>
         </div>

@@ -5,10 +5,10 @@ import Dashboard from "./Dashboard";
 
 function App() {
   return (
-    <React.Fragment>
+    <div className="app">
       <Navbar />
       <Dashboard />
-    </React.Fragment>
+    </div>
   );
 }
 
