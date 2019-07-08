@@ -1,14 +1,14 @@
 import React from "react";
 import "./css/App.css";
 import Navbar from "../component/Navbar";
-import Drawer from "../component/Drawer";
+import Dashboard from "./Dashboard";
 
 function App() {
   return (
-    <div className="App">
+    <React.Fragment>
       <Navbar />
-      <Drawer />
-    </div>
+      <Dashboard />
+    </React.Fragment>
   );
 }
 
